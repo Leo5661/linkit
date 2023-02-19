@@ -25,6 +25,7 @@ function App() {
       <div className="App">
         <h2 className="title">LinkIt</h2>
         <h4 className="subTitle">Make connection fast.</h4>
+        <div className="divider"></div>
       </div>
       {isMatched ? <Match /> : <NoMatch />}
     </Component>
@@ -39,18 +40,26 @@ const Component = styled.div`
   gap: 1rem;
 
   .App {
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: flex-start;
     flex-direction: column;
     .title {
+      padding-left: 10px;
       font-weight: 100;
       color: rgba(255, 255, 255, 0.753);
     }
 
     .subTitle {
+      padding-left: 10px;
       font-weight: 100;
       color: rgba(255, 255, 255, 0.404);
+    }
+    .divider {
+      height: 0.5px;
+      background-color: rgba(255, 255, 255, 0.233);
+      width: 100%;
     }
   }
 `;

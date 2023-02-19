@@ -11,6 +11,7 @@ html,
 
 
 body {
-  padding: .5rem;
+  padding-top: 10px;
+  padding-bottom: 10px;
   background-color: #383838;
 }
