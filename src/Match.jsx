@@ -1,16 +1,53 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Timer from "./Timer";
 
 function Match() {
-  function onTimerComplete(event) {}
+  const [isDisable, setIsDisable] = useState(false);
+  const [pauseTimer, setPauseTimer] = useState(false);
+
+  function onTimerComplete(event) {
+    if (event) {
+      setIsDisable(event);
+      sendConnectionEvent();
+    }
+  }
+
+  function sendConnectionEvent() {
+    setPauseTimer(true);
+    const queryOption = { currentWindow: true, active: true };
+    chrome.tabs.query(queryOption, tabs => {
+      chrome.tabs.sendMessage(
+        tabs[0].id,
+        {
+          isSendConnection: true
+        },
+        res => {
+          console.log(res);
+          setIsDisable(true);
+        }
+      );
+    });
+  }
+
+  function handleTimer() {
+    setPauseTimer(!pauseTimer);
+  }
 
   return (
     <Component>
       <div className="title">Sending connection will start in</div>
-      <Timer onComplet={onTimerComplete} />
-      <button className="sendConnction">Send Connection</button>
-      <button className="hold">Hold</button>
+      <Timer onPause={pauseTimer} onComplet={onTimerComplete} />
+      <button
+        disabled={isDisable}
+        className="sendConnction"
+        onClick={sendConnectionEvent}
+      >
+        Send Connection
+      </button>
+      <button disabled={isDisable} className="hold" onClick={handleTimer}>
+        {pauseTimer ? "Start" : "Hold"}
+      </button>
     </Component>
   );
 }

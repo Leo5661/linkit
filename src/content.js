@@ -4,7 +4,7 @@ chrome.runtime.onMessage.addListener((obj, sender, res) => {
     console.log("content is run")
     runCode();
 
-    if(obj.isLoad){
+    if(obj.isSendConnection){
         res("we got message");
     }
  })

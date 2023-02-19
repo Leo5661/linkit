@@ -1,28 +1,31 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
-function Timer({ onComplet }) {
+function Timer({ onPause, onComplet }) {
   const [sec, setSec] = useState("59");
 
   let timer;
   useEffect(() => {
     timer = setInterval(() => {
-      if (Number(sec) !== 0) {
-        const second = Number(sec) - 1;
-        if (second > 9) {
-          setSec(second);
+      if (!onPause) {
+        if (Number(sec) !== 0) {
+          const second = Number(sec) - 1;
+          if (second > 9) {
+            setSec(second);
+          } else {
+            setSec(`0${second}`);
+          }
         } else {
-          setSec(`0${second}`);
+          setSec("00");
+          onComplet(true);
+          return;
         }
-      } else {
-        setSec("00");
-        onComplet(true);
-        return;
       }
     }, 1000);
 
     return () => clearInterval(timer);
   });
+
   return (
     <Component>
       <section>
