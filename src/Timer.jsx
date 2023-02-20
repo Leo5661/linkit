@@ -29,12 +29,12 @@ function Timer({ onPause, onComplet }) {
   return (
     <Component>
       <section>
-        <h2>00</h2>
+        <h2 className={onPause ? "pause" : ""}>00</h2>
         <span>Min</span>
       </section>
       <div className="tick">:</div>
       <section>
-        <h2>{sec}</h2>
+        <h2 className={onPause ? "pause" : ""}>{sec}</h2>
         <span>Sec</span>
       </section>
     </Component>
@@ -48,6 +48,7 @@ const Component = styled.div`
   gap: 0.5rem;
   padding: 10px 10px;
   border-radius: 5px;
+  transition: all 0.3s;
   background: linear-gradient(145deg, #323232, #3c3c3c);
   box-shadow: 5px 5px 10px #303030, -5px -5px 10px #404040;
   section {
@@ -63,13 +64,15 @@ const Component = styled.div`
       font-size: 0.5rem;
       font-weight: 100;
       text-transform: uppercase;
-      color: white;
+      color: rgba(255, 255, 255, 0.705);
+    }
+    .pause {
+      color: rgba(255, 255, 255, 0.404);
     }
   }
   .tick {
     font-size: 1rem;
     height: 50%;
-    color: white;
   }
 `;
 

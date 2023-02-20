@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Timer from "./Timer";
 
 function Match() {
   const [isDisable, setIsDisable] = useState(false);
   const [pauseTimer, setPauseTimer] = useState(false);
+  const [isBtnTextChanged, setIsBtnTextChanged] = useState(false);
 
   function onTimerComplete(event) {
     if (event) {
@@ -13,8 +14,7 @@ function Match() {
     }
   }
 
-  function sendConnectionEvent() {
-    setPauseTimer(true);
+  function broadcastMessage() {
     const queryOption = { currentWindow: true, active: true };
     chrome.tabs.query(queryOption, tabs => {
       chrome.tabs.sendMessage(
@@ -23,15 +23,23 @@ function Match() {
           isSendConnection: true
         },
         res => {
-          console.log(res);
-          setIsDisable(true);
+          if (res) {
+            console.log(res);
+            setIsDisable(true);
+          }
         }
       );
     });
   }
 
+  function sendConnectionEvent() {
+    setPauseTimer(true);
+    broadcastMessage();
+  }
+
   function handleTimer() {
     setPauseTimer(!pauseTimer);
+    setIsBtnTextChanged(!isBtnTextChanged);
   }
 
   return (
@@ -46,7 +54,7 @@ function Match() {
         Send Connection
       </button>
       <button disabled={isDisable} className="hold" onClick={handleTimer}>
-        {pauseTimer ? "Start" : "Hold"}
+        {isBtnTextChanged ? "Start" : "Hold"}
       </button>
     </Component>
   );
@@ -65,7 +73,7 @@ const Component = styled.div`
     color: rgba(255, 255, 255, 0.404);
   }
   .sendConnction {
-    color: rgba(255, 255, 255, 0.521);
+    color: rgba(255, 255, 255, 0.705);
     width: 140px;
     height: 35px;
     border-radius: 50px;
@@ -77,9 +85,16 @@ const Component = styled.div`
       border: 1px solid rgba(255, 255, 255, 0.404);
       cursor: pointer;
     }
+    &:disabled {
+      color: rgba(255, 255, 255, 0.404);
+    }
+    &:disabled:hover {
+      border: none;
+      cursor: default;
+    }
   }
   .hold {
-    color: rgba(255, 255, 255, 0.404);
+    color: rgba(255, 255, 255, 0.705);
     border-radius: 50px;
     width: 140px;
     border: none;
@@ -90,6 +105,13 @@ const Component = styled.div`
       border: 1px solid rgba(255, 255, 255, 0.404);
       box-shadow: 5px 5px 10px #303030, -5px -5px 10px #404040;
       cursor: pointer;
+    }
+    &:disabled {
+      color: rgba(255, 255, 255, 0.404);
+    }
+    &:disabled:hover {
+      border: none;
+      cursor: default;
     }
   }
 `;

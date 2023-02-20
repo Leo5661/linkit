@@ -12,9 +12,11 @@ function NoMatch() {
 }
 
 const Component = styled.div`
+  padding: 10px;
   display: flex;
+  width: 100%;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   flex-direction: column;
   flex-wrap: wrap;
   .message {
