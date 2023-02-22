@@ -1,7 +1,8 @@
 {
     "manifest_version": 3,
-    "name": "LinkIt(react)",
-    "version": "0.1.1",
+    "name": "LinkIt",
+    "version": "0.0.1",
+    "description": "Connect with many people in just one click",
 
     "content_scripts": [
         {

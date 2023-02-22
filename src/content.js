@@ -9,7 +9,7 @@ chrome.runtime.onMessage.addListener((obj, sender, res) => {
   }
 });
 
-const wait = (ms) => {
+function wait(ms){
   return new Promise((res, rej) => {
     setTimeout(() => {
       res(true)
@@ -100,7 +100,7 @@ async function runCode() {
     } else {
       if (isConnectBtn(btn[0])) {
         console.log("Staring to wait")
-        await wait(5000);
+        await wait(3000);
         console.log("Wait complete")
         performClick(btn[0]);
       }

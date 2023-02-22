@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 function Timer({ onPause, onComplet }) {
-  const [sec, setSec] = useState("59");
+  const [sec, setSec] = useState("20");
 
   let timer;
   useEffect(() => {
