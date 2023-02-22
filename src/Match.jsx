@@ -1,11 +1,23 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import SendingMsg from "./SendingMsg";
 import Timer from "./Timer";
 
 function Match() {
   const [isDisable, setIsDisable] = useState(false);
   const [pauseTimer, setPauseTimer] = useState(false);
   const [isBtnTextChanged, setIsBtnTextChanged] = useState(false);
+  const [isSending, setIsSending] = useState(false);
+  const [isSent, setIsSent] = useState(false);
+
+  useEffect(() => {
+    chrome.runtime.onMessage.addListener((obj, sender, response) => {
+      if (obj.isConnectionSent) {
+        setIsSent(true);
+        response("conection stoped");
+      }
+    });
+  });
 
   function onTimerComplete(event) {
     if (event) {
@@ -20,11 +32,13 @@ function Match() {
       chrome.tabs.sendMessage(
         tabs[0].id,
         {
+          tabId: tabs[0].id,
           isSendConnection: true
         },
         res => {
-          if (res) {
+          if (res === "started") {
             console.log(res);
+            setIsSending(true);
             setIsDisable(true);
           }
         }
@@ -53,9 +67,13 @@ function Match() {
       >
         Send Connection
       </button>
-      <button disabled={isDisable} className="hold" onClick={handleTimer}>
-        {isBtnTextChanged ? "Start" : "Hold"}
-      </button>
+      {isSending ? (
+        <SendingMsg state={!isSent} />
+      ) : (
+        <button disabled={isDisable} className="hold" onClick={handleTimer}>
+          {isBtnTextChanged ? "Start" : "Hold"}
+        </button>
+      )}
     </Component>
   );
 }

@@ -1,20 +1,18 @@
 console.log("content");
-chrome.runtime.onMessage.addListener((obj, sender, res) => {
-  console.log(obj, sender);
-  console.log("content is run");
-  runCode();
-
+chrome.runtime.onMessage.addListener((obj, sender, response) => {
   if (obj.isSendConnection) {
-    res(true);
+    console.log("content is run");
+    runCode(obj.tabId);
+    response("started");
   }
 });
 
-function wait(ms){
+function wait(ms) {
   return new Promise((res, rej) => {
     setTimeout(() => {
-      res(true)
-    }, ms)
-  })
+      res(true);
+    }, ms);
+  });
 }
 
 function isConnectBtn(btn) {
@@ -57,7 +55,7 @@ function handleDialog() {
   if (dialog !== null || dialog !== undefined) {
     [...dialog.getElementsByTagName("button")].forEach(btn => {
       if (btn.innerText === "Send") {
-        btn.click();    
+        btn.click();
         console.log("send btn clicked");
       } else if (btn.innerText === "Connect") {
         selectOptions(dialog);
@@ -68,8 +66,8 @@ function handleDialog() {
     });
     // await wait(2000);
     closeDialog(dialog);
-  } else{
-    return
+  } else {
+    return;
   }
 }
 
@@ -77,7 +75,7 @@ const mutationObserver = new MutationObserver(mutations => {
   mutations.forEach(mutation => {
     if (mutation.type === "childList") {
       handleDialog();
-    } 
+    }
   });
 });
 
@@ -89,9 +87,7 @@ function performClick(btn) {
   });
 }
 
-
-
-async function runCode() {
+async function runCode(tabId) {
   const sec = document.getElementsByClassName("entity-result__actions");
   for (let i = 0; i < sec.length; i++) {
     const btn = sec[i].getElementsByTagName("button");
@@ -99,11 +95,18 @@ async function runCode() {
       continue;
     } else {
       if (isConnectBtn(btn[0])) {
-        console.log("Staring to wait")
+        console.log("Staring to wait");
         await wait(3000);
-        console.log("Wait complete")
+        console.log("Wait complete");
         performClick(btn[0]);
       }
+    }
+    if (i === sec.length - 1) {
+      console.log("loop ends");
+      const res = await chrome.runtime.sendMessage({
+        isConnectionSent: true
+      });
+      console.log(res);
     }
   }
 }
